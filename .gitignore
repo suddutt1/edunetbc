@@ -1,0 +1,7 @@
+bin/*
+config/*
+*.block
+*.tx
+crypto-config/*
+worldstate/
+blocks/

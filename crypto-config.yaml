@@ -1,0 +1,43 @@
+OrdererOrgs:
+- Domain: edunet.net
+  Name: Orderer
+  Specs:
+  - SANS:
+    - localhost
+  Template:
+    Count: 1
+    Hostname: orderer{{.Index}}
+PeerOrgs:
+- CA:
+    Hostname: ca
+  Domain: edunet.net
+  EnableNodeOUs: true
+  Name: EDUNET
+  Template:
+    Count: 1
+    SANS:
+    - localhost
+  Users:
+    Count: 1
+- CA:
+    Hostname: ca
+  Domain: iitj.ac.in
+  EnableNodeOUs: true
+  Name: IITJ
+  Template:
+    Count: 1
+    SANS:
+    - localhost
+  Users:
+    Count: 1
+- CA:
+    Hostname: ca
+  Domain: iitkjp.ac.in
+  EnableNodeOUs: true
+  Name: IITKJP
+  Template:
+    Count: 1
+    SANS:
+    - localhost
+  Users:
+    Count: 1

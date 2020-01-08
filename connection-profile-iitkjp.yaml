@@ -1,0 +1,132 @@
+version: 1.0.0
+client:
+  organization: iitkjp
+  logging:
+    level: debug
+  peer:
+    timeout:
+      connection: 100s
+      discovery:
+        greylistExpiry: 100s
+      response: 600s
+  orderer:
+    timeout:
+      connection: 100s
+      response: 600s
+  global:
+    timeout:
+      execute: 180s
+      query: 180s
+      resmgmt: 180s
+  cryptoconfig:
+    path: /home/blockchain/edunet/network/crypto-config
+  credentialStore:
+    cryptoStore:
+      path: ./tmpiitkjpmsp/msp
+    path: ./tmpiitkjpmsp/state-store
+  BCCSP:
+    security:
+      default:
+        provider: SW
+      enabled: true
+      hashAlgorithm: SHA2
+      level: 256
+      softVerify: false
+  tlsCerts:
+    systemCertPool: false
+channels:
+  degreerecordchannel:
+    orderers:
+    - orderer0.edunet.net
+    peers:
+      peer0.iitkjp.ac.in:
+        chaincodeQuery: true
+        endorsingPeer: true
+        eventSource: true
+        ledgerQuery: true
+    policies:
+      discovery:
+        maxTargets: 1
+        retryOpts:
+          attempts: 2
+          backoffFactor: 2
+          initialBackoff: 500ms
+          maxBackoff: 5s
+      eventService:
+        balancer: Random
+        blockHeightLagThreshold: 5
+        peerMonitorPeriod: 6s
+        reconnectBlockHeightLagThreshold: 8
+        resolverStrategy: PreferOrg
+      queryChannelConfig:
+        maxTargets: 1
+        minResponses: 1
+        retryOpts:
+          attempts: 2
+          backoffFactor: 1
+          initialBackoff: 500ms
+          maxBackoff: 5s
+orderers:
+  orderer0.edunet.net:
+    url: orderer0.edunet.net:7050
+    grpcOptions:
+      allow-insecure: false
+      fail-fast: false
+      keep-alive-permit: false
+      keep-alive-time: 20s
+      keep-alive-timeout: 100s
+      ssl-target-name-override: orderer0.edunet.net
+    tlsCACerts:
+      path: /home/blockchain/edunet/network/crypto-config/ordererOrganizations/edunet.net/tlsca/tlsca.edunet.net-cert.pem
+peers:
+  peer0.iitkjp.ac.in:
+    grpcOptions:
+      allow-insecure: false
+      fail-fast: false
+      keep-alive-permit: false
+      keep-alive-time: 20s
+      keep-alive-timeout: 100s
+      ssl-target-name-override: peer0.iitkjp.ac.in
+    tlsCACerts:
+      path: /home/blockchain/edunet/network/crypto-config/peerOrganizations/iitkjp.ac.in/tlsca/tlsca.iitkjp.ac.in-cert.pem
+organizations:
+  iitkjp:
+    mspid: IITKJPMSP
+    cryptoPath: peerOrganizations/iitkjp.ac.in/users/{username}@iitkjp.ac.in/msp
+    certificateAuthorities:
+    - iitkjp-ca
+    peers:
+    - peer0.iitkjp.ac.in
+  ordererorg:
+    mspID: OrdererMSP
+    cryptoPath: ordererOrganizations/edunet.net/users/{username}@edunet.net/msp
+certificateAuthorities:
+  iitkjp-ca:
+    url: https://ca.iitkjp.ac.in:7054
+    httpsOptions:
+      verify: false
+    tlsCACerts:
+      path: /home/blockchain/edunet/network/crypto-config/peerOrganizations/iitkjp.ac.in/ca/ca.iitkjp.ac.in-cert.pem
+    caName: IITKJPCA
+    registrar:
+      enrollId: admin
+      enrollSecret: adminpw
+entityMatchers:
+  certificateAuthority:
+  - mappedHost: ca.iitkjp.ac.in
+    pattern: ca.iitkjp.ac.in
+    sslTargetOverrideUrlSubstitutionExp: ca.iitkjp.ac.in
+    urlSubstitutionExp: ca.iitkjp.ac.in:7054
+  orderer:
+  - eventUrlSubstitutionExp: orderer0.edunet.net:7050
+    mappedHost: orderer0.edunet.net
+    pattern: orderer0.edunet.net
+    sslTargetOverrideUrlSubstitutionExp: orderer0.edunet.net
+    urlSubstitutionExp: orderer0.edunet.net:7050
+  peer:
+  - eventUrlSubstitutionExp: peer0.iitkjp.ac.in:7053
+    mappedHost: peer0.iitkjp.ac.in
+    pattern: peer0.iitkjp.ac.in
+    sslTargetOverrideUrlSubstitutionExp: peer0.iitkjp.ac.in
+    urlSubstitutionExp: peer0.iitkjp.ac.in:7051
+X-OrgCA: IITKJPCA

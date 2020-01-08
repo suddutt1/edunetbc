@@ -1,0 +1,132 @@
+version: 1.0.0
+client:
+  organization: iitj
+  logging:
+    level: debug
+  peer:
+    timeout:
+      connection: 100s
+      discovery:
+        greylistExpiry: 100s
+      response: 600s
+  orderer:
+    timeout:
+      connection: 100s
+      response: 600s
+  global:
+    timeout:
+      execute: 180s
+      query: 180s
+      resmgmt: 180s
+  cryptoconfig:
+    path: /home/blockchain/edunet/network/crypto-config
+  credentialStore:
+    cryptoStore:
+      path: ./tmpiitjmsp/msp
+    path: ./tmpiitjmsp/state-store
+  BCCSP:
+    security:
+      default:
+        provider: SW
+      enabled: true
+      hashAlgorithm: SHA2
+      level: 256
+      softVerify: false
+  tlsCerts:
+    systemCertPool: false
+channels:
+  degreerecordchannel:
+    orderers:
+    - orderer0.edunet.net
+    peers:
+      peer0.iitj.ac.in:
+        chaincodeQuery: true
+        endorsingPeer: true
+        eventSource: true
+        ledgerQuery: true
+    policies:
+      discovery:
+        maxTargets: 1
+        retryOpts:
+          attempts: 2
+          backoffFactor: 2
+          initialBackoff: 500ms
+          maxBackoff: 5s
+      eventService:
+        balancer: Random
+        blockHeightLagThreshold: 5
+        peerMonitorPeriod: 6s
+        reconnectBlockHeightLagThreshold: 8
+        resolverStrategy: PreferOrg
+      queryChannelConfig:
+        maxTargets: 1
+        minResponses: 1
+        retryOpts:
+          attempts: 2
+          backoffFactor: 1
+          initialBackoff: 500ms
+          maxBackoff: 5s
+orderers:
+  orderer0.edunet.net:
+    url: orderer0.edunet.net:7050
+    grpcOptions:
+      allow-insecure: false
+      fail-fast: false
+      keep-alive-permit: false
+      keep-alive-time: 20s
+      keep-alive-timeout: 100s
+      ssl-target-name-override: orderer0.edunet.net
+    tlsCACerts:
+      path: /home/blockchain/edunet/network/crypto-config/ordererOrganizations/edunet.net/tlsca/tlsca.edunet.net-cert.pem
+peers:
+  peer0.iitj.ac.in:
+    grpcOptions:
+      allow-insecure: false
+      fail-fast: false
+      keep-alive-permit: false
+      keep-alive-time: 20s
+      keep-alive-timeout: 100s
+      ssl-target-name-override: peer0.iitj.ac.in
+    tlsCACerts:
+      path: /home/blockchain/edunet/network/crypto-config/peerOrganizations/iitj.ac.in/tlsca/tlsca.iitj.ac.in-cert.pem
+organizations:
+  iitj:
+    mspid: IITJMSP
+    cryptoPath: peerOrganizations/iitj.ac.in/users/{username}@iitj.ac.in/msp
+    certificateAuthorities:
+    - iitj-ca
+    peers:
+    - peer0.iitj.ac.in
+  ordererorg:
+    mspID: OrdererMSP
+    cryptoPath: ordererOrganizations/edunet.net/users/{username}@edunet.net/msp
+certificateAuthorities:
+  iitj-ca:
+    url: https://ca.iitj.ac.in:7054
+    httpsOptions:
+      verify: false
+    tlsCACerts:
+      path: /home/blockchain/edunet/network/crypto-config/peerOrganizations/iitj.ac.in/ca/ca.iitj.ac.in-cert.pem
+    caName: IITJCA
+    registrar:
+      enrollId: admin
+      enrollSecret: adminpw
+entityMatchers:
+  certificateAuthority:
+  - mappedHost: ca.iitj.ac.in
+    pattern: ca.iitj.ac.in
+    sslTargetOverrideUrlSubstitutionExp: ca.iitj.ac.in
+    urlSubstitutionExp: ca.iitj.ac.in:7054
+  orderer:
+  - eventUrlSubstitutionExp: orderer0.edunet.net:7050
+    mappedHost: orderer0.edunet.net
+    pattern: orderer0.edunet.net
+    sslTargetOverrideUrlSubstitutionExp: orderer0.edunet.net
+    urlSubstitutionExp: orderer0.edunet.net:7050
+  peer:
+  - eventUrlSubstitutionExp: peer0.iitj.ac.in:7053
+    mappedHost: peer0.iitj.ac.in
+    pattern: peer0.iitj.ac.in
+    sslTargetOverrideUrlSubstitutionExp: peer0.iitj.ac.in
+    urlSubstitutionExp: peer0.iitj.ac.in:7051
+X-OrgCA: IITJCA

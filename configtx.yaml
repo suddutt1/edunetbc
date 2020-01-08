@@ -1,0 +1,181 @@
+
+Organizations:
+    - &OrdererOrg
+            Name: OrdererMSP
+            ID: OrdererMSP
+            MSPDir: crypto-config/ordererOrganizations/edunet.net/msp
+            Policies:
+                Readers:
+                    Type: Signature
+                    Rule: "OR('OrdererMSP.member')"
+                Writers:
+                    Type: Signature
+                    Rule: "OR('OrdererMSP.member')"
+                Admins:
+                    Type: Signature
+                    Rule: "OR('OrdererMSP.admin')"
+
+    
+    - &EDUNETOrg
+            Name: EDUNETMSP
+            ID: EDUNETMSP
+            MSPDir: crypto-config/peerOrganizations/edunet.net/msp
+            Policies:
+                Readers:
+                    Type: Signature
+                    Rule: "OR('EDUNETMSP.admin', 'EDUNETMSP.peer', 'EDUNETMSP.client' )"
+                Writers:
+                    Type: Signature
+                    Rule: "OR('EDUNETMSP.admin', 'EDUNETMSP.client' )"
+                Admins:
+                    Type: Signature
+                    Rule: "OR('EDUNETMSP.admin')"
+            AnchorPeers:
+              - Host: peer0.edunet.net
+                Port: 7051
+    
+    - &IITJOrg
+            Name: IITJMSP
+            ID: IITJMSP
+            MSPDir: crypto-config/peerOrganizations/iitj.ac.in/msp
+            Policies:
+                Readers:
+                    Type: Signature
+                    Rule: "OR('IITJMSP.admin', 'IITJMSP.peer', 'IITJMSP.client' )"
+                Writers:
+                    Type: Signature
+                    Rule: "OR('IITJMSP.admin', 'IITJMSP.client' )"
+                Admins:
+                    Type: Signature
+                    Rule: "OR('IITJMSP.admin')"
+            AnchorPeers:
+              - Host: peer0.iitj.ac.in
+                Port: 7051
+    
+    - &IITKJPOrg
+            Name: IITKJPMSP
+            ID: IITKJPMSP
+            MSPDir: crypto-config/peerOrganizations/iitkjp.ac.in/msp
+            Policies:
+                Readers:
+                    Type: Signature
+                    Rule: "OR('IITKJPMSP.admin', 'IITKJPMSP.peer', 'IITKJPMSP.client' )"
+                Writers:
+                    Type: Signature
+                    Rule: "OR('IITKJPMSP.admin', 'IITKJPMSP.client' )"
+                Admins:
+                    Type: Signature
+                    Rule: "OR('IITKJPMSP.admin')"
+            AnchorPeers:
+              - Host: peer0.iitkjp.ac.in
+                Port: 7051
+    
+
+Capabilities:
+    Channel: &ChannelCapabilities
+        V1_4_2: true
+    Orderer: &OrdererCapabilities
+        V1_4_2: true
+    Application: &ApplicationCapabilities
+        V1_4_2: true
+        V1_2: false
+        V1_1: false
+
+Application: &ApplicationDefaults
+    Organizations:
+
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+
+    Capabilities:
+        <<: *ApplicationCapabilities
+
+Orderer: &OrdererDefaults
+    OrdererType: etcdraft
+    Addresses:
+          - orderer0.edunet.net:7050
+    BatchTimeout: 2s
+    BatchSize:
+        MaxMessageCount: 10
+        AbsoluteMaxBytes: 98 MB
+        PreferredMaxBytes: 1024 KB
+    EtcdRaft:
+        Consenters:
+          
+            - Host: orderer0.edunet.net
+              Port: 7050
+              ClientTLSCert: crypto-config/ordererOrganizations/edunet.net/orderers/orderer0.edunet.net/tls/server.crt
+              ServerTLSCert: crypto-config/ordererOrganizations/edunet.net/orderers/orderer0.edunet.net/tls/server.crt
+           
+    Organizations:
+        - *OrdererOrg
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        BlockValidation:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+    Capabilities:
+        <<: *OrdererCapabilities
+
+Channel: &ChannelDefaults
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+    Capabilities:
+        <<: *ChannelCapabilities
+
+Profiles:
+    OrdererGenesis:
+        <<: *ChannelDefaults
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *OrdererOrg
+            Capabilities:
+                <<: *OrdererCapabilities 
+        Consortiums:
+            EDUNetConsortium:
+                Organizations:
+                   - *EDUNETOrg
+                   - *IITJOrg
+                   - *IITKJPOrg
+                   
+        
+    
+    degreerecordchannel:
+        Consortium: EDUNetConsortium
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+              - *EDUNETOrg
+              - *IITJOrg
+              - *IITKJPOrg
+              
+            Capabilities:
+              <<: *ApplicationCapabilities
+    
+        
+

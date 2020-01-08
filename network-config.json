@@ -1,0 +1,41 @@
+
+{
+    "fabricVersion":"1.4.2",
+    "orderers":{
+        "name" :"Orderer","mspID":"OrdererMSP","domain":"edunet.net","ordererHostname":"orderer","SANS":"localhost","type":"raft","haCount":1
+    },
+    "addCA":"true",
+    "orgs":[
+        {
+            "name" :"EDUNET",
+            "domain":"edunet.net",
+            "mspID":"EDUNETMSP",
+            "SANS":"localhost",
+            "peerCount":1,
+            "userCount":1
+        },
+        {
+            "name" :"IITJ",
+            "domain":"iitj.ac.in",
+            "mspID":"IITJMSP",
+            "SANS":"localhost",
+            "peerCount":1,
+            "userCount":1
+        },
+        {
+            "name" :"IITKJP",
+            "domain":"iitkjp.ac.in",
+            "mspID":"IITKJPMSP",
+            "SANS":"localhost",
+            "peerCount":1,
+            "userCount":1
+        }
+        ],
+    "consortium":"EDUNetConsortium",
+    "channels" :[
+
+                    {"channelName":"degreerecordchannel","orgs":["EDUNET","IITJ","IITKJP"] }
+                ],
+    "chaincodes":[{"channelName":"degreerecordchannel","ccid":"degreerecordmgmt","version":"1.0","src":"github.com/degreerecordmgmt","participants":["EDUNET","IITJ","IITKJP"]}]
+
+}

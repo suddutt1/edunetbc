@@ -1,0 +1,230 @@
+version: "2"
+networks:
+  fabricnetwork: {}
+services:
+  ca.edunet.net:
+    container_name: ca.edunet.net
+    extends:
+      file: base.yaml
+      service: ca
+    environment:
+    - FABRIC_CA_SERVER_CA_NAME=EDUNETCA
+    - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.edunet.net-cert.pem
+    - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/a0a831f36e80a12e24e5a967d24cab86b07d576931243eda5bae0d8664746eee_sk
+    - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.edunet.net-cert.pem
+    - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/a0a831f36e80a12e24e5a967d24cab86b07d576931243eda5bae0d8664746eee_sk
+    working_dir: /opt/ws
+    volumes:
+    - ./crypto-config/peerOrganizations/edunet.net/ca/:/etc/hyperledger/fabric-ca-server-config
+    - ./:/opt/ws
+    ports:
+    - 7054:7054
+    networks:
+    - fabricnetwork
+    extra_hosts:
+    - myhost:127.0.0.1
+  ca.iitj.ac.in:
+    container_name: ca.iitj.ac.in
+    extends:
+      file: base.yaml
+      service: ca
+    environment:
+    - FABRIC_CA_SERVER_CA_NAME=IITJCA
+    - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.iitj.ac.in-cert.pem
+    - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/fd6428cca526f5697e4ace5e921fe5f0510b67688291f0583e8514f2bea717c1_sk
+    - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.iitj.ac.in-cert.pem
+    - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/fd6428cca526f5697e4ace5e921fe5f0510b67688291f0583e8514f2bea717c1_sk
+    working_dir: /opt/ws
+    volumes:
+    - ./crypto-config/peerOrganizations/iitj.ac.in/ca/:/etc/hyperledger/fabric-ca-server-config
+    - ./:/opt/ws
+    ports:
+    - 8054:7054
+    networks:
+    - fabricnetwork
+    extra_hosts:
+    - myhost:127.0.0.1
+  ca.iitkjp.ac.in:
+    container_name: ca.iitkjp.ac.in
+    extends:
+      file: base.yaml
+      service: ca
+    environment:
+    - FABRIC_CA_SERVER_CA_NAME=IITKJPCA
+    - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.iitkjp.ac.in-cert.pem
+    - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/7e2b69c3ef9b9a449a9c059d5b896dad902abd985e18bff51e3ea6078d2bb18c_sk
+    - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.iitkjp.ac.in-cert.pem
+    - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/7e2b69c3ef9b9a449a9c059d5b896dad902abd985e18bff51e3ea6078d2bb18c_sk
+    working_dir: /opt/ws
+    volumes:
+    - ./crypto-config/peerOrganizations/iitkjp.ac.in/ca/:/etc/hyperledger/fabric-ca-server-config
+    - ./:/opt/ws
+    ports:
+    - 9054:7054
+    networks:
+    - fabricnetwork
+    extra_hosts:
+    - myhost:127.0.0.1
+  cli:
+    image: hyperledger/fabric-tools:${TOOLS_TAG}
+    container_name: cli
+    tty: true
+    environment:
+    - CORE_PEER_TLS_ENABLED=true
+    - GOPATH=/opt/gopath
+    - FABRIC_LOGGING_SPEC=DEBUG
+    - CORE_PEER_ID=cli
+    - GODEBUG=netdns=go
+    working_dir: /opt/ws
+    volumes:
+    - /var/run/:/host/var/run/
+    - ./:/opt/ws
+    - ./chaincode/github.com:/opt/gopath/src/github.com
+    depends_on:
+    - orderer0.edunet.net
+    - peer0.edunet.net
+    - peer0.iitj.ac.in
+    - peer0.iitkjp.ac.in
+    networks:
+    - fabricnetwork
+    extra_hosts:
+    - myhost:127.0.0.1
+  couch0:
+    container_name: couch0
+    extends:
+      file: base.yaml
+      service: couchdb
+    volumes:
+    - ./worldstate/couch0:/opt/couchdb/data
+    ports:
+    - 5984:5984
+    networks:
+    - fabricnetwork
+  couch1:
+    container_name: couch1
+    extends:
+      file: base.yaml
+      service: couchdb
+    volumes:
+    - ./worldstate/couch1:/opt/couchdb/data
+    ports:
+    - 6984:5984
+    networks:
+    - fabricnetwork
+  couch2:
+    container_name: couch2
+    extends:
+      file: base.yaml
+      service: couchdb
+    volumes:
+    - ./worldstate/couch2:/opt/couchdb/data
+    ports:
+    - 7984:5984
+    networks:
+    - fabricnetwork
+  orderer0.edunet.net:
+    container_name: orderer0.edunet.net
+    extends:
+      file: base.yaml
+      service: orderer
+    volumes:
+    - ./blocks/orderer0edunetnet:/var/hyperledger/production/orderer
+    - ./genesis.block:/var/hyperledger/orderer/genesis.block
+    - ./crypto-config/ordererOrganizations/edunet.net/orderers/orderer0.edunet.net/msp:/var/hyperledger/orderer/msp
+    - ./crypto-config/ordererOrganizations/edunet.net/orderers/orderer0.edunet.net/tls/:/var/hyperledger/orderer/tls
+    ports:
+    - 7050:7050
+    networks:
+    - fabricnetwork
+    extra_hosts:
+    - myhost:127.0.0.1
+  peer0.edunet.net:
+    container_name: peer0.edunet.net
+    extends:
+      file: base.yaml
+      service: peer
+    environment:
+    - CORE_PEER_ID=peer0.edunet.net
+    - CORE_PEER_ADDRESS=peer0.edunet.net:7051
+    - CORE_PEER_CHAINCODELISTENADDRESS=peer0.edunet.net:7052
+    - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.edunet.net:7051
+    - CORE_PEER_EVENTS_ADDRESS=peer0.edunet.net:7053
+    - CORE_PEER_LOCALMSPID=EDUNETMSP
+    - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+    - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couch0:5984
+    - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.edunet.net:7051
+    volumes:
+    - ./blocks/peer0edunetnet:/var/hyperledger/production
+    - /var/run/:/host/var/run/
+    - ./crypto-config/peerOrganizations/edunet.net/peers/peer0.edunet.net/msp:/etc/hyperledger/fabric/msp
+    - ./crypto-config/peerOrganizations/edunet.net/peers/peer0.edunet.net/tls:/etc/hyperledger/fabric/tls
+    ports:
+    - 7051:7051
+    - 7053:7053
+    depends_on:
+    - couch0
+    - orderer0.edunet.net
+    networks:
+    - fabricnetwork
+    extra_hosts:
+    - myhost:127.0.0.1
+  peer0.iitj.ac.in:
+    container_name: peer0.iitj.ac.in
+    extends:
+      file: base.yaml
+      service: peer
+    environment:
+    - CORE_PEER_ID=peer0.iitj.ac.in
+    - CORE_PEER_ADDRESS=peer0.iitj.ac.in:7051
+    - CORE_PEER_CHAINCODELISTENADDRESS=peer0.iitj.ac.in:7052
+    - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.iitj.ac.in:7051
+    - CORE_PEER_EVENTS_ADDRESS=peer0.iitj.ac.in:7053
+    - CORE_PEER_LOCALMSPID=IITJMSP
+    - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+    - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couch1:5984
+    - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.iitj.ac.in:7051
+    volumes:
+    - ./blocks/peer0iitjacin:/var/hyperledger/production
+    - /var/run/:/host/var/run/
+    - ./crypto-config/peerOrganizations/iitj.ac.in/peers/peer0.iitj.ac.in/msp:/etc/hyperledger/fabric/msp
+    - ./crypto-config/peerOrganizations/iitj.ac.in/peers/peer0.iitj.ac.in/tls:/etc/hyperledger/fabric/tls
+    ports:
+    - 8051:7051
+    - 8053:7053
+    depends_on:
+    - couch1
+    - orderer0.edunet.net
+    networks:
+    - fabricnetwork
+    extra_hosts:
+    - myhost:127.0.0.1
+  peer0.iitkjp.ac.in:
+    container_name: peer0.iitkjp.ac.in
+    extends:
+      file: base.yaml
+      service: peer
+    environment:
+    - CORE_PEER_ID=peer0.iitkjp.ac.in
+    - CORE_PEER_ADDRESS=peer0.iitkjp.ac.in:7051
+    - CORE_PEER_CHAINCODELISTENADDRESS=peer0.iitkjp.ac.in:7052
+    - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.iitkjp.ac.in:7051
+    - CORE_PEER_EVENTS_ADDRESS=peer0.iitkjp.ac.in:7053
+    - CORE_PEER_LOCALMSPID=IITKJPMSP
+    - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+    - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couch2:5984
+    - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.iitkjp.ac.in:7051
+    volumes:
+    - ./blocks/peer0iitkjpacin:/var/hyperledger/production
+    - /var/run/:/host/var/run/
+    - ./crypto-config/peerOrganizations/iitkjp.ac.in/peers/peer0.iitkjp.ac.in/msp:/etc/hyperledger/fabric/msp
+    - ./crypto-config/peerOrganizations/iitkjp.ac.in/peers/peer0.iitkjp.ac.in/tls:/etc/hyperledger/fabric/tls
+    ports:
+    - 9051:7051
+    - 9053:7053
+    depends_on:
+    - couch2
+    - orderer0.edunet.net
+    networks:
+    - fabricnetwork
+    extra_hosts:
+    - myhost:127.0.0.1
