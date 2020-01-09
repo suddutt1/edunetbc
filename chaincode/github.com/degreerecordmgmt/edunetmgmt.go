@@ -174,7 +174,7 @@ func (sc *EduNetSmartContract) approveStudent(stub shim.ChaincodeStubInterface) 
 		_scLogger.Errorf("Identity of the user could not be retrived")
 		return shim.Error("Identity of the user could not be retrieved")
 	}
-	if _, isFound := _educationalInstitutes[id]; isFound {
+	if id == "EDUNETMSP" {
 		_scLogger.Errorf("Trxn not allowed")
 		return shim.Error("Trxn not allowed")
 	}
@@ -208,7 +208,7 @@ func (sc *EduNetSmartContract) upsertInstituteEntry(stub shim.ChaincodeStubInter
 		_scLogger.Errorf("Identity of the user could not be retrived")
 		return shim.Error("Identity of the user could not be retrieved")
 	}
-	if _, isFound := _educationalInstitutes[id]; isFound {
+	if id == "EDUNETMSP" {
 		_scLogger.Errorf("Trxn not allowed")
 		return shim.Error("Trxn not allowed")
 	}
@@ -236,7 +236,7 @@ func (sc *EduNetSmartContract) registerDegree(stub shim.ChaincodeStubInterface) 
 		_scLogger.Errorf("Identity of the user could not be retrived")
 		return shim.Error("Identity of the user could not be retrieved")
 	}
-	if _, isFound := _educationalInstitutes[id]; isFound {
+	if id == "EDUNETMSP" {
 		_scLogger.Errorf("Trxn not allowed")
 		return shim.Error("Trxn not allowed")
 	}
@@ -299,7 +299,7 @@ func (sc *EduNetSmartContract) upsertDegreeDetails(stub shim.ChaincodeStubInterf
 		_scLogger.Errorf("Identity of the user could not be retrived")
 		return shim.Error("Identity of the user could not be retrieved")
 	}
-	if _, isFound := _educationalInstitutes[id]; isFound {
+	if id == "EDUNETMSP" {
 		_scLogger.Errorf("Trxn not allowed")
 		return shim.Error("Trxn not allowed")
 	}
@@ -355,7 +355,9 @@ func (sc *EduNetSmartContract) getInvokerIdentity(stub shim.ChaincodeStubInterfa
 	if err != nil {
 		return false, "Unknown."
 	}
-	return true, fmt.Sprintf("%s", mspID)
+	retMSPID := fmt.Sprintf("%s", mspID)
+	_scLogger.Infof("MSP ID |%s|", retMSPID)
+	return true, retMSPID
 
 }
 func (sc *EduNetSmartContract) getTrxnTS(stub shim.ChaincodeStubInterface) string {
