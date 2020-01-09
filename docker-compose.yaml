@@ -10,9 +10,9 @@ services:
     environment:
     - FABRIC_CA_SERVER_CA_NAME=EDUNETCA
     - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.edunet.net-cert.pem
-    - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/cfdb7be0d6467f0c0dfc506c038c13015a66bebe2e5fcc0e02eb072c84f5c527_sk
+    - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/92b367cf3ce736d841df790c49e7f1e67dbd6b0235dcf25ec5ed8f8cfff6d6ba_sk
     - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.edunet.net-cert.pem
-    - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/cfdb7be0d6467f0c0dfc506c038c13015a66bebe2e5fcc0e02eb072c84f5c527_sk
+    - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/92b367cf3ce736d841df790c49e7f1e67dbd6b0235dcf25ec5ed8f8cfff6d6ba_sk
     working_dir: /opt/ws
     volumes:
     - ./crypto-config/peerOrganizations/edunet.net/ca/:/etc/hyperledger/fabric-ca-server-config
@@ -31,9 +31,9 @@ services:
     environment:
     - FABRIC_CA_SERVER_CA_NAME=IITJCA
     - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.iitj.ac.in-cert.pem
-    - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/0a5306600e8c007686bcd7a9051136c95d8f448e92cd6f4e76e27a2521714d23_sk
+    - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/bfc07f18b8e37d8e7d4a0aa0c30376713a4e428f1d5f219b32183007709fbce2_sk
     - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.iitj.ac.in-cert.pem
-    - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/0a5306600e8c007686bcd7a9051136c95d8f448e92cd6f4e76e27a2521714d23_sk
+    - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/bfc07f18b8e37d8e7d4a0aa0c30376713a4e428f1d5f219b32183007709fbce2_sk
     working_dir: /opt/ws
     volumes:
     - ./crypto-config/peerOrganizations/iitj.ac.in/ca/:/etc/hyperledger/fabric-ca-server-config
@@ -52,9 +52,9 @@ services:
     environment:
     - FABRIC_CA_SERVER_CA_NAME=IITKJPCA
     - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.iitkjp.ac.in-cert.pem
-    - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/cc9e4404d0b014ac1f35727c0571a852c0259003d85c8a8c7b1006519f3a4a10_sk
+    - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/2d8433c101e7bfafc4a1b2dbc95ee2ecce7a6479290a2fee9d8c637fda89accb_sk
     - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.iitkjp.ac.in-cert.pem
-    - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/cc9e4404d0b014ac1f35727c0571a852c0259003d85c8a8c7b1006519f3a4a10_sk
+    - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/2d8433c101e7bfafc4a1b2dbc95ee2ecce7a6479290a2fee9d8c637fda89accb_sk
     working_dir: /opt/ws
     volumes:
     - ./crypto-config/peerOrganizations/iitkjp.ac.in/ca/:/etc/hyperledger/fabric-ca-server-config

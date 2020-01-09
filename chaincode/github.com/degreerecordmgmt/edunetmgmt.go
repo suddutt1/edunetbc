@@ -117,6 +117,8 @@ func (sc *EduNetSmartContract) Invoke(stub shim.ChaincodeStubInterface) pb.Respo
 		response = sc.probe(stub)
 	case "registerStudent":
 		response = sc.registerStudent(stub)
+	case "approveStudent":
+		response = sc.approveStudent(stub)
 	case "queryById":
 		response = sc.queryObjectByID(stub)
 	case "modInstitueRegInfo":
