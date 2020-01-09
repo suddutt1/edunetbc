@@ -7,7 +7,7 @@ mkdir edunet
 cd edunet
 mkdir network api ui
 cd network
-git clone git remote add origin git@github.com:suddutt1/edunetbc.git . # Do not miss the .   
+git clone https://github.com/suddutt1/edunetbc.git . # Do not miss the .   
 
 ```
 
