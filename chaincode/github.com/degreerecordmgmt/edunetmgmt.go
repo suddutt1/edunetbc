@@ -55,6 +55,10 @@ type StudentDegree struct {
 	ValidFrom string `json:"validFrom"` //Date in YYYY-MM-DD format
 	UUID      string `json:"uuid"`
 	CreatedBy string `json:"createdBy"`
+	DegeeName string `json:"name"`
+	Dept      string `json:"dept"`
+	TCH       string `json:"tch"`
+	Type      string `json:"type"`
 }
 
 //EduNetSmartContract implments the degree and student management smart contract
@@ -242,6 +246,10 @@ func (sc *EduNetSmartContract) registerDegree(stub shim.ChaincodeStubInterface) 
 	}
 
 	var degreeDetails StudentDegree
+	err := json.Unmarshal([]byte(args[0]), &degreeDetails)
+	if err != nil {
+		return shim.Error("Unable to parse input json")
+	}
 	degreeDetails.Obj = "edunet.student.degree"
 
 	studentUUID := degreeDetails.StudentID
@@ -277,6 +285,11 @@ func (sc *EduNetSmartContract) registerDegree(stub shim.ChaincodeStubInterface) 
 	degreeDetails.ValidFrom = sc.getTrxnTS(stub)
 	degreeDetails.UUID = stub.GetTxID()
 	degreeDetails.CreatedBy = id
+	degreeDetails.DegeeName = degInfo.Name
+	degreeDetails.Type = degInfo.Type
+	degreeDetails.Dept = degInfo.OfferedBy
+	degreeDetails.TCH = degInfo.TCH
+
 	return sc.saveEntry(stub, degreeDetails, degreeDetails.UUID, false)
 
 }
