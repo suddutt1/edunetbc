@@ -39,7 +39,7 @@ type DegreeOffered struct {
 	DegreeID  string `json:"uuid"`
 	Name      string `json:"name"`
 	Type      string `json:"type"`
-	TCH       int    `json:"totalCreditHours"`
+	TCH       string `json:"totalCreditHours"`
 	OfferedBy string `json:"offeredByDept"`
 	ValidFrom string `json:"validFrom"` //Date in YYYY-MM-DD format
 	ValidUpto string `json:"validUpto"` //Date in YYYY-MM-DD format
@@ -48,13 +48,13 @@ type DegreeOffered struct {
 
 //StudentDegree represents degree ownedby a student
 type StudentDegree struct {
-	Obj       string  `json:"objType"`
-	StudentID string  `json:"studuuid"`
-	DegreeID  string  `json:"degreeuuid"`
-	CGPA      float64 `json:"cgpa"`
-	ValidFrom string  `json:"validFrom"` //Date in YYYY-MM-DD format
-	UUID      string  `json:"uuid"`
-	CreatedBy string  `json:"createdBy"`
+	Obj       string `json:"objType"`
+	StudentID string `json:"studuuid"`
+	DegreeID  string `json:"degreeuuid"`
+	CGPA      string `json:"cgpa"`
+	ValidFrom string `json:"validFrom"` //Date in YYYY-MM-DD format
+	UUID      string `json:"uuid"`
+	CreatedBy string `json:"createdBy"`
 }
 
 //EduNetSmartContract implments the degree and student management smart contract
@@ -294,6 +294,10 @@ func (sc *EduNetSmartContract) upsertDegreeDetails(stub shim.ChaincodeStubInterf
 	}
 
 	var degreeDetails DegreeOffered
+	err := json.Unmarshal([]byte(args[0]), &degreeDetails)
+	if err != nil {
+		return shim.Error("Unable to parse input json")
+	}
 	degreeDetails.Obj = "edunet.inst.degreeinfo"
 	if len(degreeDetails.DegreeID) == 0 {
 		//New degree to the added in the system
