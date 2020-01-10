@@ -85,3 +85,16 @@ docker-compose down
 ./removeImages.sh
 
 ```
+
+# To check the chaincode installations
+```sh
+. setpeer.sh EDUNET peer0
+peer chaincode query -C degreerecordchannel -n degreerecordmgmt -c '{"Args":["probe"]}'
+
+. setpeer.sh IITJ peer0
+peer chaincode query -C degreerecordchannel -n degreerecordmgmt -c '{"Args":["probe"]}'
+
+. setpeer.sh IITKJP peer0
+peer chaincode query -C degreerecordchannel -n degreerecordmgmt -c '{"Args":["probe"]}'
+
+```
