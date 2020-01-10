@@ -12,7 +12,6 @@ import (
 )
 
 var _scLogger = shim.NewLogger("EduNetSmartContract")
-var _educationalInstitutes = make(map[string]bool)
 
 //StudentIDInfo represents student identity
 type StudentIDInfo struct {
@@ -68,9 +67,6 @@ type EduNetSmartContract struct {
 // Init initializes chaincode.
 func (sc *EduNetSmartContract) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	_scLogger.Infof("Inside the init method ")
-	_educationalInstitutes["IITJMSP"] = true
-	_educationalInstitutes["IITKJPMSP"] = true
-
 	return shim.Success(nil)
 }
 func (sc *EduNetSmartContract) probe(stub shim.ChaincodeStubInterface) pb.Response {
